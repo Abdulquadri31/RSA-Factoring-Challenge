@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+"""
+Module for factorizing RSA numbers into two prime prime factors.
+"""
+
+import sys
+
+
+def is_prime(num):
+    """
+    Check if a number is prime.
+
+    Args:
+        num (int): The number to check.
+
+    Returns:
+        bool: True if num is prime, False otherwise.
+    """
+    if num <= 1:
+        return False
+    if num <= 3:
+        return True
+    if num % 2 == 0 or num % 3 == 0:
+        return False
+    i = 5
+    while i * i <= num:
+        if num % i == 0 or num % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+
+def rsa_factorize(n):
+    """
+    Factorize RSA number n into two prime factors.
+
+    Args:
+        n (int): The RSA number to factorize.
+
+    Returns:
+        tuple: A tuple of two prime factors (p, q) such that n = p * q.
+    """
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            if is_prime(i) and is_prime(n // i):
+                return i, n // i
+    return None
+
+
+def process_file(filename):
+    """
+    Process the file and factorize the RSA number.
+
+    Args:
+        filename (str): The name of the file containing an RSA number.
+    """
+    with open(filename, 'r') as f:
+        num = int(f.readline().strip())
+        factors = rsa_factorize(num)
+        if factors:
+            p, q = factors
+            print(f"{num}={p}*{q}")
+        else:
+            print(f"No prime factors found for {num}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: rsa <file>")
+        sys.exit(1)
+
+    process_file(sys.argv[1])

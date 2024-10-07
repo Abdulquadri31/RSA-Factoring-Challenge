@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""
+Module for factorizing natural numbers into two factors.
+"""
+
+import sys
+
+
+def factorize(n):
+    """
+    Factorize a number n into two factors.
+
+    Args:
+        n (int): The number to factorize.
+
+    Returns:
+        tuple: A tuple of two factors (p, q) such that n = p * q.
+    """
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return i, n // i
+    return n, 1
+
+
+def process_file(filename):
+    """
+    Process the file and factorize each number.
+
+    Args:
+        filename (str): The name of the file containing numbers to factorize.
+    """
+    with open(filename, 'r') as f:
+        for line in f:
+            num = int(line.strip())
+            p, q = factorize(num)
+            print(f"{num}={p}*{q}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        sys.exit(1)
+
+    process_file(sys.argv[1])
